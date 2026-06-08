@@ -15,18 +15,25 @@ namespace TraineeManagement.Api.Controllers
             _service = service;
         }
         [HttpPost]
-        public IActionResult Post(CreateTraineeRequest T)
+        public async Task<IActionResult> Post(CreateTraineeRequest T)
         {
             return Ok(_service.Create(T));
         }
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll( String? search)
         {
-            return Ok(_service.GetAll());
+            if (!String.IsNullOrWhiteSpace(search))
+            {
+                var t=await _service.Search(search);
+                if(t==null) return NotFound();
+                else return Ok(t);
+            } else {
+                return Ok(_service.GetAll());
+            }
         }
 
         [HttpGet("{id}")]
-        public TraineeResponse GetById(int id)
+        public Task<TraineeResponse> GetById(int id)
         {
             // var trainee = trainees.FirstOrDefault(x => x.Id == id);
             // if(trainee == null)
@@ -43,14 +50,23 @@ namespace TraineeManagement.Api.Controllers
             return _service.GetById(id);
         }
         [HttpDelete("{id}")]
-        public bool Delete(int id)
+        public Task<bool> Delete(int id)
         {
             return _service.Delete(id);
         }
         [HttpPut("{id}")]
-        public bool Update(int id , UpdateTraineeRequest request)
+        public Task<bool> Update(int id , UpdateTraineeRequest request)
         {
             return _service.Update(id , request);
         }
+
+
+        // [HttpGet]
+        // public async Task<IActionResult> Search(String search)
+        // {
+        //     var t=await _service.Search(search);
+        //     if(t==null) return NotFound();
+        //     else return Ok(t);
+        // }
     }
 }
