@@ -6,9 +6,11 @@ c# , .net
 ## Features Completed
 - /GET/health
 - GET /api/health
-- GET /api/trainees
+- GET /api/trainees (with search functionalities)
 - GET /api/trainees/{id}
 - POST /api/trainees
+- PUT /api/trainees
+- DELETE /api/trainees
 
 ## How to Run
 1. Prerequisites
