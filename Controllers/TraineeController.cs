@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ActionConstraints;
 using TraineeManagement.API.DTOs;
 using TraineeManagement.API.Models;
 using TraineeManagement.API.Services;
@@ -17,7 +18,8 @@ namespace TraineeManagement.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> Post(CreateTraineeRequest T)
         {
-            return Ok(_service.Create(T));
+            var result = await _service.Create(T);
+            return Ok(result);
         }
         [HttpGet]
         public async Task<IActionResult> GetAll( String? search)
@@ -28,24 +30,31 @@ namespace TraineeManagement.Api.Controllers
                 if(t==null) return NotFound();
                 else return Ok(t);
             } else {
-                return Ok(_service.GetAll());
+                var result = await _service.GetAll();
+                return Ok(result);
             }
         }
 
         [HttpGet("{id}")]
-        public Task<TraineeResponse> GetById(int id)
+        public async Task<IActionResult> GetById(int id)
         {
-            return _service.GetById(id);
+            var trainee = await _service.GetById(id);
+            if (trainee == null) return NotFound();
+            return Ok(trainee);
         }
         [HttpDelete("{id}")]
-        public Task<bool> Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            return _service.Delete(id);
+            var success = await _service.Delete(id);
+            if (!success) return NotFound();
+            return NoContent();
         }
         [HttpPut("{id}")]
-        public Task<bool> Update(int id , UpdateTraineeRequest request)
+        public async Task<IActionResult> Update(int id , UpdateTraineeRequest request)
         {
-            return _service.Update(id , request);
+            var success = await _service.Update(id, request);
+            if (!success) return NotFound();
+            return Ok();
         }
     }
 }

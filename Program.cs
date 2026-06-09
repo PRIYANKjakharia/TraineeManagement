@@ -7,10 +7,15 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddOpenApi();
 builder.Services.AddScoped<ITraineeService , TraineeService>();
-builder.Services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("TranieeManagementDb"));
+builder.Services.AddDbContext<AppDbContext>(options =>
+{
+    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+    options.UseMySQL(connectionString);
+});
 
 var app = builder.Build();
 
