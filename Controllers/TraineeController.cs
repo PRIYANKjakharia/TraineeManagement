@@ -16,7 +16,7 @@ namespace TraineeManagement.Api.Controllers
             _service = service;
         }
         [HttpPost]
-        public async Task<IActionResult> Post(CreateTraineeRequest T)
+        public async Task<IActionResult> Create(CreateTraineeRequest T)
         {
             var result = await _service.Create(T);
             return Ok(result);

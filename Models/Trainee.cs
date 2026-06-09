@@ -5,6 +5,7 @@ namespace TraineeManagement.API.Models;
 
 public class Trainee
 {
+    [Key]
     public int Id { get; set; }
 
     public string FirstName { get; set; }

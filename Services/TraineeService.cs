@@ -13,7 +13,7 @@ public class TraineeService : ITraineeService
     {
         _context = context;
     }
-    private static int nextId = 1;
+    // private static int nextId = 1;
 
 
     // create
@@ -21,7 +21,7 @@ public class TraineeService : ITraineeService
     {
         var trainee = new Trainee
         {
-            Id = nextId++,
+            // Id = nextId++,
             FirstName = request.FirstName,
             LastName = request.LastName,
             Email = request.Email,
