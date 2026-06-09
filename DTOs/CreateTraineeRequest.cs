@@ -5,10 +5,10 @@ namespace TraineeManagement.API.DTOs;
 public class CreateTraineeRequest
 {
     [Required (ErrorMessage = "FirstName is required")]
-    [MaxLength(5 , ErrorMessage = "LastName must be below 50 characters")]
+    [MaxLength(50 , ErrorMessage = "LastName must be below 50 characters")]
     public string FirstName { get; set; }
     [Required(ErrorMessage = "LastName is required")]
-    [MaxLength(5 , ErrorMessage = "LastName must be below 50 characters")]
+    [MaxLength(50 , ErrorMessage = "LastName must be below 50 characters")]
     public string LastName { get; set; }
     [Required(ErrorMessage = "Email is required")]
     [EmailAddress(ErrorMessage = "Valid Email is required")]

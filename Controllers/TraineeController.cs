@@ -35,18 +35,6 @@ namespace TraineeManagement.Api.Controllers
         [HttpGet("{id}")]
         public Task<TraineeResponse> GetById(int id)
         {
-            // var trainee = trainees.FirstOrDefault(x => x.Id == id);
-            // if(trainee == null)
-            // {
-            //     return NotFound();
-            // }
-            // return Ok(trainee);
-
-            // foreach(Trainee t in trainees)
-            // {
-            //     if(t.Id == id)return Ok(t);
-            // }
-            // return NotFound();
             return _service.GetById(id);
         }
         [HttpDelete("{id}")]
@@ -59,14 +47,5 @@ namespace TraineeManagement.Api.Controllers
         {
             return _service.Update(id , request);
         }
-
-
-        // [HttpGet]
-        // public async Task<IActionResult> Search(String search)
-        // {
-        //     var t=await _service.Search(search);
-        //     if(t==null) return NotFound();
-        //     else return Ok(t);
-        // }
     }
 }

@@ -119,9 +119,9 @@ public class TraineeService : ITraineeService
 
 
 // search
-    public async Task<List<TraineeResponse>> Search(String s)
+    public async Task<List<TraineeResponse>> Search(String search)
     {
-        var t = await _context.Trainees.Where(e=>e.FirstName==s || e.LastName==s || e.Email==s || e.TechStack==s).Select( e => new TraineeResponse
+        var t = await _context.Trainees.Where(e=>e.FirstName==search || e.LastName==search || e.Email==search || e.TechStack==search).Select( e => new TraineeResponse
         {
             Id = e.Id,
             FirstName = e.FirstName,
