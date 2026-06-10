@@ -13,7 +13,6 @@ public class TraineeService : ITraineeService
     {
         _context = context;
     }
-    // private static int nextId = 1;
 
 
     // create
