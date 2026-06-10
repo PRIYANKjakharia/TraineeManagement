@@ -39,22 +39,22 @@ namespace TraineeManagement.Api.Controllers
         public async Task<IActionResult> GetById(int id)
         {
             var trainee = await _service.GetById(id);
-            if (trainee == null) return NotFound();
+            if (trainee == null) return NotFound( new{ message = "id not found"} );
             return Ok(trainee);
         }
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             var success = await _service.Delete(id);
-            if (!success) return NotFound();
+            if (!success) return NotFound( new{ message = "Sucessfully deleted"} );
             return NoContent();
         }
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id , UpdateTraineeRequest request)
         {
             var success = await _service.Update(id, request);
-            if (!success) return NotFound();
-            return Ok();
+            if (!success) return NotFound(new{ message = "Id Not Found"});
+            return Ok( new{ message = "Sucessfully updated"} );
         }
     }
 }
