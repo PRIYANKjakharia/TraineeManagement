@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ActionConstraints;
 using TraineeManagement.API.DTOs;
@@ -6,6 +7,7 @@ using TraineeManagement.API.Services;
 
 namespace TraineeManagement.Api.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/trainees")]
     public class TraineeController : ControllerBase
