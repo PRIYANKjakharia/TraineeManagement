@@ -19,20 +19,17 @@ namespace TraineeManagement.Api.Controllers
         public async Task<IActionResult> Create(CreateTraineeRequest T)
         {
             var result = await _service.Create(T);
+            if(result == null)
+            {
+                return BadRequest(new{ message = "Email already Exists" });
+            }
             return Ok(result);
         }
         [HttpGet]
-        public async Task<IActionResult> GetAll( String? search)
+        public async Task<IActionResult> GetAll( [FromQuery]TraineeQueryParameters query)
         {
-            if (!String.IsNullOrWhiteSpace(search))
-            {
-                var t=await _service.Search(search);
-                if(t==null) return NotFound();
-                else return Ok(t);
-            } else {
-                var result = await _service.GetAll();
-                return Ok(result);
-            }
+            var result = await _service.GetAllAsync(query);
+            return Ok(result);
         }
 
         [HttpGet("{id}")]
@@ -46,15 +43,14 @@ namespace TraineeManagement.Api.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var success = await _service.Delete(id);
-            if (!success) return NotFound( new{ message = "Sucessfully deleted"} );
+            if (!success) return NotFound( new{ message = "Id Not Found"} );
             return NoContent();
         }
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id , UpdateTraineeRequest request)
         {
-            var success = await _service.Update(id, request);
-            if (!success) return NotFound(new{ message = "Id Not Found"});
-            return Ok( new{ message = "Sucessfully updated"} );
+            string? success = await _service.Update(id, request);
+            return Ok( new{ message = success} );
         }
     }
 }

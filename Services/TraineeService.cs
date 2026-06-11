@@ -3,21 +3,29 @@ using TraineeManagement.API.Models;
 using TraineeManagement.API.DTOs;
 using TraineeManagement.API.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.CodeAnalysis.CSharp;
 
 namespace TraineeManagement.API.Services;
 
 public class TraineeService : ITraineeService
 {
     private readonly AppDbContext _context;
-    public TraineeService(AppDbContext context)
+    private readonly ILogger<TraineeService> _logger;
+    public TraineeService(AppDbContext context , ILogger<TraineeService> logger)
     {
         _context = context;
+        _logger = logger;
     }
 
 
     // create
     public async Task<TraineeResponse> Create(CreateTraineeRequest request)
-    {
+    {   
+        var EmailExists = _context.Trainees.FirstOrDefault(k => k.Email.ToLower() == request.Email.ToLower());
+        if(EmailExists != null){
+            _logger.LogCritical("Email already exists");
+            return null;
+        }
         var trainee = new Trainee
         {
             // Id = nextId++,
@@ -33,6 +41,7 @@ public class TraineeService : ITraineeService
         // trainees.Add(trainee);
         await _context.Trainees.AddAsync(trainee);
         await _context.SaveChangesAsync();
+        _logger.LogInformation("User Created with email "+request.Email);
         return new TraineeResponse
         {
             Id = trainee.Id,
@@ -53,9 +62,13 @@ public class TraineeService : ITraineeService
     public async Task<bool> Delete(int id)
     {
         var t = await _context.Trainees.FindAsync(id);
-        if(t == null)return false;
+        if(t == null){
+            _logger.LogCritical("Id not found");
+            return false;
+        }
         _context.Trainees.Remove(t);
         await _context.SaveChangesAsync();
+        _logger.LogInformation("User with id "+id+" deleted");
         return true;
     }
 
@@ -67,6 +80,7 @@ public class TraineeService : ITraineeService
     public async Task<List<TraineeResponse>> GetAll()
     {
         var query = _context.Trainees.AsQueryable();
+        _logger.LogInformation("Info Displayed");
         return await _context.Trainees.Select(t => new TraineeResponse
         {
             Id = t.Id,
@@ -81,7 +95,11 @@ public class TraineeService : ITraineeService
     public async Task<TraineeResponse?> GetById(int id)
     {
         var t = await _context.Trainees.FindAsync(id);
-        if(t == null)return null;
+        if(t == null){
+            _logger.LogCritical("Id not found");
+            return null;
+        }
+        _logger.LogInformation("Info Displayed");
         return new TraineeResponse
         {
             Id = t.Id,
@@ -97,10 +115,18 @@ public class TraineeService : ITraineeService
 
 
 // update
-    public async Task<bool> Update (int id, UpdateTraineeRequest request)
+    public async Task<string> Update (int id, UpdateTraineeRequest request)
     {
         var t = await _context.Trainees.FindAsync(id);
-        if(t == null)return false;
+        var EmailExists = _context.Trainees.FirstOrDefault(k => k.Email.ToLower() == request.Email.ToLower());
+        if(EmailExists != null){
+            _logger.LogCritical("Email already exists");
+            return "Email already exists";
+        }
+        if(t == null){
+            _logger.LogCritical("Id not found");
+            return "Id Not Found";
+        }
 
         t.FirstName = request.FirstName;
         t.LastName = request.LastName;
@@ -110,7 +136,8 @@ public class TraineeService : ITraineeService
         t.UpdatedDate = DateTime.UtcNow;
 
         await _context.SaveChangesAsync();
-        return true;
+        _logger.LogInformation("User Updated with Id "+id);
+        return "Updated SucessFully";
     }
 
 
@@ -132,8 +159,43 @@ public class TraineeService : ITraineeService
 
         if(t.Count == 0)
         {
+            _logger.LogCritical("Id not found");
             return null;
         }
+        _logger.LogInformation("Search Displayed");
         return t;
     }
+
+    public async Task<PagedResponse<TraineeResponse>> GetAllAsync(TraineeQueryParameters query)
+    {
+        var trainees = _context.Trainees.AsQueryable();
+        if (!string.IsNullOrWhiteSpace(query.Search))
+        {
+            trainees = trainees.Where(t => t.FirstName.Contains(query.Search) || t.LastName.Contains(query.Search));
+        }
+        if (!string.IsNullOrWhiteSpace(query.Status))
+        {
+            trainees = trainees.Where(t => t.Status == query.Status);
+        }
+        int page = query.PageSize * (query.PageNumber-1);
+        List<TraineeResponse> ret =  await trainees.Select( t => new TraineeResponse
+        {
+            Id = t.Id,
+            FirstName = t.FirstName,
+            LastName = t.LastName,
+            Email = t.Email,
+            TechStack = t.TechStack,
+            Status = t.Status
+        }).Skip(page).Take(query.PageSize).ToListAsync();
+
+        _logger.LogInformation("request for page no. "+query.PageNumber+" with page size "+query.PageSize+" fetched and Displayed");
+        return new PagedResponse<TraineeResponse>
+        {
+            PageNumber = query.PageNumber,
+            PageSize = query.PageSize,
+            TotalRecords = ret.Count,
+            Data = ret
+        };
+    }
+
 }

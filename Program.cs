@@ -39,6 +39,16 @@ builder.Services.AddAuthentication( JwtBearerDefaults.AuthenticationScheme ).Add
 builder.Services.AddAuthorization();
 // Console.WriteLine(BCrypt.Net.BCrypt.HashPassword("Admin@123"));
 
+var  MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: MyAllowSpecificOrigins,policy  => {
+        policy.WithOrigins("http://localhost:3000", "http://localhost:5173");
+    });
+});
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -58,6 +68,8 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseCors(MyAllowSpecificOrigins);
 
 app.Run();
 
