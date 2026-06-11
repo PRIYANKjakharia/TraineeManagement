@@ -77,20 +77,20 @@ public class TraineeService : ITraineeService
 
 
 // get
-    public async Task<List<TraineeResponse>> GetAll()
-    {
-        var query = _context.Trainees.AsQueryable();
-        _logger.LogInformation("Info Displayed");
-        return await _context.Trainees.Select(t => new TraineeResponse
-        {
-            Id = t.Id,
-            FirstName = t.FirstName,
-            LastName = t.LastName,
-            Email = t.Email,
-            TechStack = t.TechStack,
-            Status = t.Status
-        }).ToListAsync();
-    }
+    // public async Task<List<TraineeResponse>> GetAll()
+    // {
+    //     var query = _context.Trainees.AsQueryable();
+    //     _logger.LogInformation("Info Displayed");
+    //     return await _context.Trainees.Select(t => new TraineeResponse
+    //     {
+    //         Id = t.Id,
+    //         FirstName = t.FirstName,
+    //         LastName = t.LastName,
+    //         Email = t.Email,
+    //         TechStack = t.TechStack,
+    //         Status = t.Status
+    //     }).ToListAsync();
+    // }
 
     public async Task<TraineeResponse?> GetById(int id)
     {
@@ -145,26 +145,26 @@ public class TraineeService : ITraineeService
 
 
 // search
-    public async Task<List<TraineeResponse>> Search(String search)
-    {
-        var t = await _context.Trainees.Where(e=>e.FirstName==search || e.LastName==search || e.Email==search || e.TechStack==search).Select( e => new TraineeResponse
-        {
-            Id = e.Id,
-            FirstName = e.FirstName,
-            LastName = e.LastName,
-            Email = e.Email,
-            TechStack = e.TechStack,
-            Status = e.Status
-        }).ToListAsync();
+    // public async Task<List<TraineeResponse>> Search(String search)
+    // {
+    //     var t = await _context.Trainees.Where(e=>e.FirstName==search || e.LastName==search || e.Email==search || e.TechStack==search).Select( e => new TraineeResponse
+    //     {
+    //         Id = e.Id,
+    //         FirstName = e.FirstName,
+    //         LastName = e.LastName,
+    //         Email = e.Email,
+    //         TechStack = e.TechStack,
+    //         Status = e.Status
+    //     }).ToListAsync();
 
-        if(t.Count == 0)
-        {
-            _logger.LogCritical("Id not found");
-            return null;
-        }
-        _logger.LogInformation("Search Displayed");
-        return t;
-    }
+    //     if(t.Count == 0)
+    //     {
+    //         _logger.LogCritical("Id not found");
+    //         return null;
+    //     }
+    //     _logger.LogInformation("Search Displayed");
+    //     return t;
+    // }
 
     public async Task<PagedResponse<TraineeResponse>> GetAllAsync(TraineeQueryParameters query)
     {
