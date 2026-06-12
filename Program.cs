@@ -14,6 +14,8 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddOpenApi();
 builder.Services.AddScoped<ITraineeService , TraineeService>();
+builder.Services.AddScoped<IMentorService , MentorService>();
+builder.Services.AddScoped<ILearningTaskService , LearningTaskService>();
 builder.Services.AddScoped<IAuthService , AuthService>();
 builder.Services.AddDbContext<AppDbContext>(options =>
 {

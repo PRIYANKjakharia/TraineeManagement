@@ -7,18 +7,18 @@ namespace TraineeManagement.Api.Controllers
 {
     [Authorize]
     [ApiController]
-    [Route("api/trainees")]
-    public class TraineeController : ControllerBase
+    [Route("api/mentors")]
+    public class MentorController : ControllerBase
     {
-        private readonly ITraineeService _service;
-        public TraineeController(ITraineeService service)
+        private readonly IMentorService _service;
+        public MentorController(IMentorService service)
         {
             _service = service;
         }
         [HttpPost]
-        public async Task<IActionResult> Create(CreateTraineeRequest T)
+        public async Task<IActionResult> CreateAsync(CreateMentorRequest T)
         {
-            var result = await _service.Create(T);
+            var result = await _service.CreateAsync(T);
             if(result == null)
             {
                 return BadRequest(new{ message = "Email already Exists" });
@@ -26,30 +26,30 @@ namespace TraineeManagement.Api.Controllers
             return Ok(result);
         }
         [HttpGet]
-        public async Task<IActionResult> GetAll( [FromQuery]TraineeQueryParameters query)
+        public async Task<IActionResult> GetAll()
         {
-            var result = await _service.GetAllAsync(query);
+            var result = await _service.GetAllAsync();
             return Ok(result);
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int id)
+        public async Task<IActionResult> GetByIdAsync(int id)
         {
-            var trainee = await _service.GetById(id);
-            if (trainee == null) return NotFound( new{ message = "id not found"} );
-            return Ok(trainee);
+            var Mentor = await _service.GetByIdAsync(id);
+            if (Mentor == null) return NotFound( new{ message = "id not found"} );
+            return Ok(Mentor);
         }
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> DeleteAsync(int id)
         {
-            var success = await _service.Delete(id);
+            var success = await _service.DeleteAsync(id);
             if (!success) return NotFound( new{ message = "Id Not Found"} );
             return NoContent();
         }
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id , UpdateTraineeRequest request)
+        public async Task<IActionResult> UpdateAsync(int id , UpdateMentorRequest request)
         {
-            string result = await _service.Update(id, request);
+            string result = await _service.UpdateAsync(id, request);
             if(result == "Id Not Found")
             {
                 return NotFound( new { meessage = result});
