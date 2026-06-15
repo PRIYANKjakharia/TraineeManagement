@@ -3,14 +3,14 @@ using TraineeManagement.API.Models;
 namespace TraineeManagement.API.Data;
 public class AppDbContext : DbContext
 {
-    public AppDbContext(DbContextOptions<AppDbContext> options)
-        : base(options)
+    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
     }
     public DbSet<Trainee> Trainees {get ; set;}
     public DbSet<User> Users {get ; set;}
     public DbSet<Mentor> Mentors {get ; set;}
     public DbSet<LearningTask> LearningTasks {get ; set;}
+    public DbSet<TaskAssignment> TaskAssignments {get ; set;}
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -25,6 +25,10 @@ public class AppDbContext : DbContext
             Role="admin"
    
         });
+
+        modelBuilder.Entity<TaskAssignment>().HasOne(t=> t.Trainee).WithMany().HasForeignKey(t=> t.TraineeId);
+        modelBuilder.Entity<TaskAssignment>().HasOne(t=> t.Mentor).WithMany().HasForeignKey(t=> t.MentorId);
+        modelBuilder.Entity<TaskAssignment>().HasOne(t=> t.LearningTask).WithMany().HasForeignKey(t=> t.LearningTaskId);
  
     }
 }

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TraineeManagement.API.Data;
 
@@ -10,9 +11,11 @@ using TraineeManagement.API.Data;
 namespace TraineeManagement.Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260615082703_AddTaskAssignmentTable")]
+    partial class AddTaskAssignmentTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -101,14 +104,8 @@ namespace TraineeManagement.Api.Migrations
                     b.Property<int?>("LearningTaskId")
                         .HasColumnType("int");
 
-                    b.Property<string>("LearningTaskTitle")
-                        .HasColumnType("longtext");
-
                     b.Property<int?>("MentorId")
                         .HasColumnType("int");
-
-                    b.Property<string>("MentorName")
-                        .HasColumnType("longtext");
 
                     b.Property<string>("Remarks")
                         .HasColumnType("longtext");
@@ -118,9 +115,6 @@ namespace TraineeManagement.Api.Migrations
 
                     b.Property<int?>("TraineeId")
                         .HasColumnType("int");
-
-                    b.Property<string>("TraineeName")
-                        .HasColumnType("longtext");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime(6)");
@@ -202,7 +196,7 @@ namespace TraineeManagement.Api.Migrations
                             Id = 1,
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "admin@gmail.com",
-                            PasswordHash = "$2a$11$QnkYK8ITojLlx09j0/OkueKcevkjAnGJI8X1UxtXJ0os/ZFE6nGei",
+                            PasswordHash = "$2a$11$vYKM4UYCLoHp4/CUyR3Kruek.a.Y8AEZ/DC292IRdj02R2C30nrwy",
                             Role = "admin",
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Username = "admin"
