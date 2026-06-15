@@ -20,7 +20,7 @@ public class TaskAssignmentService : ITaskAssignmentService
 
 
     // create
-    public async Task<TaskAssignmentResponse> CreateAsync(CreateTaskAssignmentRequest request)
+    public async Task<TaskAssignmentResponse?> CreateAsync(CreateTaskAssignmentRequest request)
     {   
         var traineeExists = await _context.Trainees.FirstOrDefaultAsync(x => x.Id == request.TraineeId);
         var mentorExists = await _context.Mentors.FirstOrDefaultAsync(x => x.Id == request.MentorId);
@@ -92,7 +92,9 @@ public class TaskAssignmentService : ITaskAssignmentService
     {
         _logger.LogInformation("Info Displayed");
 
+        
 
+        // .Include(e=>e.Trainee)
         return await _context.TaskAssignments.Select(t => new TaskAssignmentResponse
         {
             Id = t.Id,
@@ -106,6 +108,7 @@ public class TaskAssignmentService : ITaskAssignmentService
             AssignedDate = t.AssignedDate,
             Status = t.Status,
             Remarks = t.Remarks,
+            // Trainee = t.Trainee,
         }).ToListAsync();
     }
 
@@ -129,6 +132,7 @@ public class TaskAssignmentService : ITaskAssignmentService
             DueDate = t.DueDate,
             AssignedDate = t.AssignedDate,
             Status = t.Status,
+            // Trainee = t.Trainee,
             Remarks = t.Remarks,
         };
     }

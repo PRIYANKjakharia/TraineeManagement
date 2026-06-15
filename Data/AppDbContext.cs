@@ -11,6 +11,8 @@ public class AppDbContext : DbContext
     public DbSet<Mentor> Mentors {get ; set;}
     public DbSet<LearningTask> LearningTasks {get ; set;}
     public DbSet<TaskAssignment> TaskAssignments {get ; set;}
+    public DbSet<Submission> Submissions {get ; set;}
+    public DbSet<Review> Reviews {get ; set;}
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -29,6 +31,11 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<TaskAssignment>().HasOne(t=> t.Trainee).WithMany().HasForeignKey(t=> t.TraineeId);
         modelBuilder.Entity<TaskAssignment>().HasOne(t=> t.Mentor).WithMany().HasForeignKey(t=> t.MentorId);
         modelBuilder.Entity<TaskAssignment>().HasOne(t=> t.LearningTask).WithMany().HasForeignKey(t=> t.LearningTaskId);
+
+        modelBuilder.Entity<Submission>().HasOne(t=> t.TaskAssignment).WithMany().HasForeignKey(t=> t.TaskAssignmentId);
+
+        modelBuilder.Entity<Review>().HasOne(r=> r.Submission).WithMany().HasForeignKey(r=> r.SubmissionId);
+        modelBuilder.Entity<Review>().HasOne(r=> r.Mentor).WithMany().HasForeignKey(r=> r.MentorId);
  
     }
 }

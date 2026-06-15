@@ -21,7 +21,7 @@ namespace TraineeManagement.Api.Controllers
             var result = await _service.CreateAsync(T);
             if(result == null)
             {
-                return BadRequest(new{ message = "trainee/mentor.LearningTask Id not found  Or AssignedDate is greater than DueDate" });
+                return BadRequest(new{ message = "trainee/mentor/LearningTask Id not found  Or AssignedDate is greater than DueDate" });
             }
             return Ok(result);
         }

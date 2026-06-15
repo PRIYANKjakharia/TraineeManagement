@@ -18,6 +18,8 @@ builder.Services.AddScoped<IMentorService , MentorService>();
 builder.Services.AddScoped<ILearningTaskService , LearningTaskService>();
 builder.Services.AddScoped<ITaskAssignmentService , TaskAssignmentService>();
 builder.Services.AddScoped<IAuthService , AuthService>();
+builder.Services.AddScoped<ISubmissionService , SubmissionService>();
+builder.Services.AddScoped<IReviewService , ReviewService>();
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");

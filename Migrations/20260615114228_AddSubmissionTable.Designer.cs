@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TraineeManagement.API.Data;
 
@@ -10,9 +11,11 @@ using TraineeManagement.API.Data;
 namespace TraineeManagement.Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260615114228_AddSubmissionTable")]
+    partial class AddSubmissionTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -81,53 +84,6 @@ namespace TraineeManagement.Api.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Mentors");
-                });
-
-            modelBuilder.Entity("TraineeManagement.API.Models.Review", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("CreatedDate")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("Feedback")
-                        .HasColumnType("longtext");
-
-                    b.Property<int?>("MentorId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ReviewStatus")
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTime?>("ReviewedDate")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<int?>("Score")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("SubmissionDate")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<int?>("SubmissionId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("TaskAssignmentId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("datetime(6)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("MentorId");
-
-                    b.HasIndex("SubmissionId");
-
-                    b.HasIndex("TaskAssignmentId");
-
-                    b.ToTable("Reviews");
                 });
 
             modelBuilder.Entity("TraineeManagement.API.Models.Submission", b =>
@@ -286,32 +242,11 @@ namespace TraineeManagement.Api.Migrations
                             Id = 1,
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "admin@gmail.com",
-                            PasswordHash = "$2a$11$bMSNMxlU/Rtyle.cmN8rl.vw7DkElSIqrxod2qKabxh7Tm8hh2vhy",
+                            PasswordHash = "$2a$11$UcL5ERSQ5hkdedOsU5OZueKDpJvCGObOJ/dFEp3AFUvHAMCtH4qYq",
                             Role = "admin",
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Username = "admin"
                         });
-                });
-
-            modelBuilder.Entity("TraineeManagement.API.Models.Review", b =>
-                {
-                    b.HasOne("TraineeManagement.API.Models.Mentor", "Mentor")
-                        .WithMany()
-                        .HasForeignKey("MentorId");
-
-                    b.HasOne("TraineeManagement.API.Models.Submission", "Submission")
-                        .WithMany()
-                        .HasForeignKey("SubmissionId");
-
-                    b.HasOne("TraineeManagement.API.Models.TaskAssignment", "TaskAssignment")
-                        .WithMany()
-                        .HasForeignKey("TaskAssignmentId");
-
-                    b.Navigation("Mentor");
-
-                    b.Navigation("Submission");
-
-                    b.Navigation("TaskAssignment");
                 });
 
             modelBuilder.Entity("TraineeManagement.API.Models.Submission", b =>
