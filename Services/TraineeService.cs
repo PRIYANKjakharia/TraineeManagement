@@ -21,7 +21,7 @@ public class TraineeService : ITraineeService
     // create
     public async Task<TraineeResponse> Create(CreateTraineeRequest request)
     {   
-        var EmailExists = _context.Trainees.FirstOrDefault(k => k.Email.ToLower() == request.Email.ToLower());
+        var EmailExists = await _context.Trainees.FirstOrDefaultAsync(k => k.Email.ToLower() == request.Email.ToLower());
         if(EmailExists != null){
             _logger.LogCritical("Email already exists");
             return null;
@@ -41,7 +41,7 @@ public class TraineeService : ITraineeService
         // trainees.Add(trainee);
         await _context.Trainees.AddAsync(trainee);
         await _context.SaveChangesAsync();
-        _logger.LogInformation("Trainee Created with email "+request.Email);
+        _logger.LogInformation("User Created with email "+request.Email);
         return new TraineeResponse
         {
             Id = trainee.Id,
@@ -68,7 +68,7 @@ public class TraineeService : ITraineeService
         }
         _context.Trainees.Remove(t);
         await _context.SaveChangesAsync();
-        _logger.LogInformation("Trainee with id "+id+" deleted");
+        _logger.LogInformation("User with id "+id+" deleted");
         return true;
     }
 
@@ -77,7 +77,7 @@ public class TraineeService : ITraineeService
 
 
 // get
-    // public async Task<List<TraineeResponse>> GetAllAsync()
+    // public async Task<List<TraineeResponse>> GetAll()
     // {
     //     var query = _context.Trainees.AsQueryable();
     //     _logger.LogInformation("Info Displayed");
@@ -118,7 +118,7 @@ public class TraineeService : ITraineeService
     public async Task<string> Update (int id, UpdateTraineeRequest request)
     {
         var t = await _context.Trainees.FindAsync(id);
-        var EmailExists = _context.Trainees.FirstOrDefault(k => k.Email.ToLower() == request.Email.ToLower());
+        var EmailExists = await _context.Trainees.FirstOrDefaultAsync(k => k.Id != id && k.Email.ToLower() == request.Email.ToLower());
         if(EmailExists != null){
             _logger.LogCritical("Email already exists");
             return "Email already exists";
@@ -136,7 +136,7 @@ public class TraineeService : ITraineeService
         t.UpdatedDate = DateTime.UtcNow;
 
         await _context.SaveChangesAsync();
-        _logger.LogInformation("Trainee Updated with Id "+id);
+        _logger.LogInformation("User Updated with Id "+id);
         return "Updated SucessFully";
     }
 

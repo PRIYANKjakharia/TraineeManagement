@@ -6,7 +6,7 @@ public class CreateMentorRequest
 {
     [Required (ErrorMessage = "FirstName is required")]
     [MaxLength(50 , ErrorMessage = "FirstName must be below 50 characters")]
-    public string FirstName { get; set; }
+    public string FirstName { get; set ;} 
     [Required(ErrorMessage = "LastName is required")]
     [MaxLength(50 , ErrorMessage = "LastName must be below 50 characters")]
     public string LastName { get; set; }

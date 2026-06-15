@@ -22,3 +22,13 @@ public class CreateLearningTaskRequest
     [AllowedValues("Active", "Inactive",ErrorMessage ="Status must be from Active, Inactive")]
     public string? Status { get; set; }
 }
+
+
+
+
+
+
+
+
+
+

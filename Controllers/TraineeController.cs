@@ -44,7 +44,7 @@ namespace TraineeManagement.Api.Controllers
         {
             var success = await _service.Delete(id);
             if (!success) return NotFound( new{ message = "Id Not Found"} );
-            return NoContent();
+            return Ok(new{ message = "Deleted sucessfully"});
         }
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id , UpdateTraineeRequest request)

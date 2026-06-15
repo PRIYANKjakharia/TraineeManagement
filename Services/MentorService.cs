@@ -117,7 +117,7 @@ public class MentorService : IMentorService
     public async Task<string> UpdateAsync (int id, UpdateMentorRequest request)
     {
         var t = await _context.Mentors.FindAsync(id);
-        var emailExists = _context.Mentors.FirstOrDefault(k => k.Email.ToLower() == request.Email.ToLower());
+        var emailExists = await _context.Mentors.FirstOrDefaultAsync(k => k.Id != id && k.Email.ToLower() == request.Email.ToLower());
         if(emailExists != null){
             _logger.LogCritical("Email already exists");
             return "Email already exists";

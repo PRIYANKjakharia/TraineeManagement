@@ -7,13 +7,13 @@ public class UpdateLearningTaskRequest
 {
     [Required (ErrorMessage = "Title is required")]
     [MaxLength(100 , ErrorMessage = "Title must be below 100 characters")]
-    public string Title { get; set; }
+    public string? Title { get; set; }
 
     [Required(ErrorMessage = "Description is required")]
-    public string Description { get; set; }
+    public string? Description { get; set; }
 
     [Required(ErrorMessage = "ExpectedTechStack is required")]
-    public string ExpectedTechStack { get; set; }
+    public string? ExpectedTechStack { get; set; }
 
     [Required(ErrorMessage = "DueDate is required")]
     public DateTime DueDate { get; set; }

@@ -40,7 +40,7 @@ namespace TraineeManagement.Api.Controllers
         {
             var success = await _service.DeleteAsync(id);
             if (!success) return NotFound( new{ message = "Id Not Found"} );
-            return NoContent();
+            return Ok( new{ message = "deleted sucessfully"} );
         }
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateAsync(int id , UpdateLearningTaskRequest request)

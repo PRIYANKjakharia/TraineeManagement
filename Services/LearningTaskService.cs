@@ -36,7 +36,7 @@ public class LearningTaskService : ILearningTaskService
         // trainees.Add(learningTask);
         await _context.LearningTasks.AddAsync(learningTask);
         await _context.SaveChangesAsync();
-        _logger.LogInformation("Mentor Created with DueDate "+request.DueDate);
+        _logger.LogInformation("learning task Created with DueDate "+request.DueDate);
         return new LearningTaskResponse
         {
             Id = learningTask.Id,
@@ -125,9 +125,10 @@ public class LearningTaskService : ILearningTaskService
         t.UpdatedDate = DateTime.UtcNow;
 
         await _context.SaveChangesAsync();
-        _logger.LogInformation("Mentor Updated with Id "+id);
+        _logger.LogInformation("learning task Updated with Id "+id);
         return "Updated SucessFully";
     }
+
 
 
     // search
