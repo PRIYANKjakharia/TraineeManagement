@@ -4,6 +4,7 @@ using TraineeManagement.API.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using TraineeManagement.Api.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -65,6 +66,8 @@ if (app.Environment.IsDevelopment())
         options.DocumentPath = "/openapi/v1.json";
     });
 }
+
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseHttpsRedirection();
 

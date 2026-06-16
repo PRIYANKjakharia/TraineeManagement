@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using TraineeManagement.API.DTOs;
 using TraineeManagement.API.Services;
 
@@ -59,5 +60,12 @@ namespace TraineeManagement.Api.Controllers
             }
             return Ok( new{ message = result} );
         }
+
+        [HttpGet("test")]
+        public IActionResult test ()
+        {
+            throw new Exception("testing exception");
+        }
+
     }
 }
