@@ -93,8 +93,7 @@ public class TaskAssignmentService : ITaskAssignmentService
         _logger.LogInformation("Info Displayed");
 
         
-
-        // .Include(e=>e.Trainee)
+        // .Include(e=>e.Trainee).Include(e=>e.Mentor).Include(e=>e.LearningTask)
         return await _context.TaskAssignments.Select(t => new TaskAssignmentResponse
         {
             Id = t.Id,
