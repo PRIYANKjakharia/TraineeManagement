@@ -3,12 +3,12 @@ using System.Text.Json;
  
 namespace TraineeManagement.Api.Middleware
 {
-    public class ExceptionMiddleware
+    public class GlobalExceptionMiddleware
     {
         private readonly RequestDelegate _next;
-        private readonly ILogger<ExceptionMiddleware> _logger;
+        private readonly ILogger<GlobalExceptionMiddleware> _logger;
  
-        public ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddleware> logger)
+        public GlobalExceptionMiddleware(RequestDelegate next, ILogger<GlobalExceptionMiddleware> logger)
         {
             _next = next;
             _logger = logger;
@@ -35,7 +35,7 @@ namespace TraineeManagement.Api.Middleware
  
             var response = new
             {
-                Message = "An unexpected error occurred. Please try again later."
+                message = "An unexpected error occurred. Please try again later."
             };
  
             await context.Response.WriteAsync(JsonSerializer.Serialize(response));
