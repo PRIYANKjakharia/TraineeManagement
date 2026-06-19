@@ -34,16 +34,16 @@ public class SubmissionFileService : ISubmissionFileService
         }
 
 
-        string[] allowedExtensions = _configuration.GetSection("FileValidation:AllowedExtensions").Get<string[]>()!;
+        string[] allowedExtensions = _configuration.GetSection("FileStorage:AllowedExtensions").Get<string[]>()!;
         string extension = Path.GetExtension(file.FileName).ToLower();
         if (!allowedExtensions.Contains(extension))
         {
-            throw new Exception("Invalid file type");
+            throw new BadHttpRequestException("Invalid file type");
         }
 
 
 
-        long maxSize = _configuration.GetValue<long>("FileValidation:MaxSizeMB") *1024 * 1024;
+        long maxSize = _configuration.GetValue<long>("FileStorage:MaxSizeMB") *1024 * 1024;
         if(file.Length > maxSize)
         {
             throw new Exception("File too Large");
@@ -56,9 +56,9 @@ public class SubmissionFileService : ISubmissionFileService
 
 
         string checksum = await GenerateChecksum(file);
-        // var user = _httpContextAccessor.HttpContext!.User;
-        // var userId = int.Parse(user.FindFirst(ClaimTypes.NameIdentifier)!.Value);
-        // var Username = user.FindFirst(ClaimTypes.Name)!.Value;
+        var user = _httpContextAccessor.HttpContext!.User;
+        var userId = int.Parse(user.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+        var Username = user.FindFirst(ClaimTypes.Name)!.Value;
         var submissionFile = new SubmissionFile
         {
             SubmissionId = submissionId,
@@ -73,10 +73,10 @@ public class SubmissionFileService : ISubmissionFileService
         
             Checksum = checksum,
         
-            // UploadedByUser = Username,
+            UploadedByUser = Username,
 
-            // UploadedByUserId = userId,
-            UploadedByUser = "Admin",
+            UploadedByUserId = userId,
+            // UploadedByUser = "Admin",
         
             UploadedDate = DateTime.UtcNow,
         
