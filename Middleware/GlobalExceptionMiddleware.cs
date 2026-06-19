@@ -22,23 +22,22 @@ namespace TraineeManagement.Api.Middleware
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "An unhandled exception occurred.");
-                await HandleExceptionAsync(context);
+                // _logger.LogError(e, "An unhandled exception occurred.");
+                // await HandleExceptionAsync(context);
+                throw;
             }
         }
  
         private static async Task HandleExceptionAsync(HttpContext context)
         {
             context.Response.ContentType = "application/json";
- 
             context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
  
             var response = new
             {
                 message = "An unexpected error occurred. Please try again later."
             };
- 
             await context.Response.WriteAsync(JsonSerializer.Serialize(response));
         }
-    }
+    } 
 }

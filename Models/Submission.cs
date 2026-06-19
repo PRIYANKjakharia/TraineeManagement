@@ -15,4 +15,5 @@ public class Submission
     public string? Status { get; set; }
     public DateTime? CreatedDate { get; set; }
     public DateTime? UpdatedDate { get; set; }
+    public ICollection<SubmissionFile>? Files { get; set; } = new List<SubmissionFile>();
 }

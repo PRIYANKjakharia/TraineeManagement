@@ -22,6 +22,8 @@ builder.Services.AddScoped<ITaskAssignmentService , TaskAssignmentService>();
 builder.Services.AddScoped<IAuthService , AuthService>();
 builder.Services.AddScoped<ISubmissionService , SubmissionService>();
 builder.Services.AddScoped<IReviewService , ReviewService>();
+builder.Services.AddScoped<IFileStorageService , LocalFileStorageService>();
+builder.Services.AddScoped<ISubmissionFileService , SubmissionFileService>();
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");

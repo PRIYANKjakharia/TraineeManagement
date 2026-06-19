@@ -14,7 +14,7 @@ public class TaskAssignmentResponse
     public DateTime? AssignedDate { get; set; }
     public DateTime? DueDate { get; set; }
     public string? Status { get; set; }
-    public Trainee? Trainee{ get; set; }
+    // public Trainee? Trainee{ get; set; }
     public string? Remarks { get; set; }
 
 }

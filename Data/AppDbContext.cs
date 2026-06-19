@@ -13,6 +13,7 @@ public class AppDbContext : DbContext
     public DbSet<TaskAssignment> TaskAssignments {get ; set;}
     public DbSet<Submission> Submissions {get ; set;}
     public DbSet<Review> Reviews {get ; set;}
+    public DbSet<SubmissionFile> SubmissionFiles {get ; set;}
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -37,5 +38,6 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Review>().HasOne(r=> r.Submission).WithMany().HasForeignKey(r=> r.SubmissionId);
         modelBuilder.Entity<Review>().HasOne(r=> r.Mentor).WithMany().HasForeignKey(r=> r.MentorId);
  
+        modelBuilder.Entity<SubmissionFile>().HasOne(f=> f.Submission).WithMany().HasForeignKey(f=> f.SubmissionId);
     }
 }

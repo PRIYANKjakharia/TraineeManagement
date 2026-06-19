@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TraineeManagement.API.Data;
 
@@ -10,9 +11,11 @@ using TraineeManagement.API.Data;
 namespace TraineeManagement.Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260619084351_AddSubmissionFileTable")]
+    partial class AddSubmissionFileTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -173,9 +176,6 @@ namespace TraineeManagement.Api.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<string>("Checksum")
-                        .HasColumnType("longtext");
-
                     b.Property<string>("ContentType")
                         .HasColumnType("longtext");
 
@@ -191,23 +191,12 @@ namespace TraineeManagement.Api.Migrations
                     b.Property<int?>("SubmissionId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("SubmissionId1")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("UpdateDate")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("UploadedBy")
-                        .HasColumnType("longtext");
-
                     b.Property<DateTime>("UploadedDate")
                         .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("SubmissionId");
-
-                    b.HasIndex("SubmissionId1");
 
                     b.ToTable("SubmissionFiles");
                 });
@@ -331,7 +320,7 @@ namespace TraineeManagement.Api.Migrations
                             Id = 1,
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "admin@gmail.com",
-                            PasswordHash = "$2a$11$4rGfD1UAmIL7QS.uIr0paeEkDe/jz.9vJSD3JysHidYmL3nYlkdbi",
+                            PasswordHash = "$2a$11$4aMPEzGK/gZIT.elmYfbju.mntxN0W/BDwzChIjVvUcIW/q8fwVYO",
                             Role = "admin",
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Username = "admin"
@@ -374,10 +363,6 @@ namespace TraineeManagement.Api.Migrations
                         .WithMany()
                         .HasForeignKey("SubmissionId");
 
-                    b.HasOne("TraineeManagement.API.Models.Submission", null)
-                        .WithMany("Files")
-                        .HasForeignKey("SubmissionId1");
-
                     b.Navigation("Submission");
                 });
 
@@ -400,11 +385,6 @@ namespace TraineeManagement.Api.Migrations
                     b.Navigation("Mentor");
 
                     b.Navigation("Trainee");
-                });
-
-            modelBuilder.Entity("TraineeManagement.API.Models.Submission", b =>
-                {
-                    b.Navigation("Files");
                 });
 #pragma warning restore 612, 618
         }
