@@ -3,7 +3,7 @@ namespace TraineeManagement.API.DTOs;
 public class UploadFileResponse{
     public int Id { get; set; }
 
-    public string? OrigionalFileName { get; set; }
+    public string? OriginalFileName { get; set; }
 
     public string? StoredFileName { get; set; }
 
