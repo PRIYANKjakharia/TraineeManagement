@@ -22,9 +22,10 @@ namespace TraineeManagement.Api.Middleware
             }
             catch (Exception e)
             {
-                // _logger.LogError(e, "An unhandled exception occurred.");
-                // await HandleExceptionAsync(context);
-                throw;
+                _logger.LogError(e, "An unhandled exception occurred.");
+                await HandleExceptionAsync(context);
+                
+                // throw;
             }
         }
  
