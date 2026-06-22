@@ -25,7 +25,7 @@ public class ReviewService : IReviewService
         var submissionExists = await _context.Submissions.FirstOrDefaultAsync(x => x.Id == request.SubmissionId);
         var mentorExists = await _context.Mentors.FirstOrDefaultAsync(x => x.Id == request.MentorId);
         
-        if(submissionExists == null || mentorExists == null) return null;
+        if(submissionExists == null || mentorExists == null) return null!;
 
         var review = new Review
         {

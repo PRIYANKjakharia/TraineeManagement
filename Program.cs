@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using TraineeManagement.Api.Middleware;
 using System.Globalization;
+using TraineeManagement.API.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -47,6 +48,15 @@ builder.Services.AddAuthentication( JwtBearerDefaults.AuthenticationScheme ).Add
         IssuerSigningKey = new SymmetricSecurityKey( Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
     };
 });
+
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = builder.Configuration["Redis:ConnectionString"];
+});
+
+
+ 
+builder.Services.AddScoped<IRedisCacheService, RedisCacheService>();
 
 builder.Services.AddAuthorization();
 // Console.WriteLine(BCrypt.Net.BCrypt.HashPassword("Admin@123"));

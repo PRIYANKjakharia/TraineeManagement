@@ -111,16 +111,16 @@ public class SubmissionFileService : ISubmissionFileService
             return null;
         }
     
-        bool exists = await _storage.ExistsAsync(file.StoredFileName);
+        bool exists = await _storage.ExistsAsync(file.StoredFileName!);
     
         if (!exists)
         {
             return null;
         }
     
-        var stream = await _storage.OpenReadAsync(file.StoredFileName);
+        var stream = await _storage.OpenReadAsync(file.StoredFileName!);
     
-        return ( stream , file.ContentType , file.OriginalFileName );
+        return ( stream , file.ContentType , file.OriginalFileName )!;
     }
     public async Task<bool> DeleteAsync(int fileId)
     {
@@ -130,7 +130,7 @@ public class SubmissionFileService : ISubmissionFileService
         {
             return false;
         }
-        await _storage.DeleteAsync(file.StoredFileName);
+        await _storage.DeleteAsync(file.StoredFileName!);
         _context.SubmissionFiles.Remove(file);
         await _context.SaveChangesAsync();
     

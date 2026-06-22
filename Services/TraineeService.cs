@@ -4,6 +4,7 @@ using TraineeManagement.API.DTOs;
 using TraineeManagement.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.CodeAnalysis.CSharp;
+using TraineeManagement.API.Interfaces;
 
 namespace TraineeManagement.API.Services;
 
@@ -11,12 +12,14 @@ public class TraineeService : ITraineeService
 {
     private readonly AppDbContext _context;
     private readonly ILogger<TraineeService> _logger;
-    public TraineeService(AppDbContext context , ILogger<TraineeService> logger)
+    private readonly IRedisCacheService _redis;
+ 
+    public TraineeService( AppDbContext context, ILogger<TraineeService> logger, IRedisCacheService redis)
     {
         _context = context;
         _logger = logger;
+        _redis = redis;
     }
-
 
     // create
     public async Task<TraineeResponse> Create(CreateTraineeRequest request)
@@ -41,6 +44,8 @@ public class TraineeService : ITraineeService
         // trainees.Add(trainee);
         await _context.Trainees.AddAsync(trainee);
         await _context.SaveChangesAsync();
+
+        await _redis.RemoveAsync("trainees:all");
         _logger.LogInformation("User Created with email "+request.Email);
         return new TraineeResponse
         {
@@ -69,18 +74,31 @@ public class TraineeService : ITraineeService
         _context.Trainees.Remove(t);
         await _context.SaveChangesAsync();
         _logger.LogInformation("User with id "+id+" deleted");
+
+        await _redis.RemoveAsync($"trainee:{id}");
+        await _redis.RemoveAsync("trainees:all");
         return true;
     }
 
     public async Task<TraineeResponse?> GetById(int id)
     {
+        string cacheKey = $"trainee:{id}";
+        
+        var cachedData = await _redis.GetAsync<TraineeResponse>(cacheKey);
+        
+        if (cachedData != null)
+        {
+            _logger.LogInformation("Redis Hit $$$$$$$$$$$$$$$$$$$$$$");
+            return cachedData;
+        }
+        
         var t = await _context.Trainees.FindAsync(id);
         if(t == null){
             _logger.LogCritical("Id not found");
             return null;
         }
         _logger.LogInformation("Info Displayed");
-        return new TraineeResponse
+        var res = new TraineeResponse
         {
             Id = t.Id,
             FirstName = t.FirstName,
@@ -89,6 +107,10 @@ public class TraineeService : ITraineeService
             TechStack = t.TechStack,
             Status = t.Status
         };
+
+        await _redis.SetAsync(cacheKey , res , TimeSpan.FromMinutes(5));
+        _logger.LogInformation("Redis Miss $$$$$$$$$$$$$$$$$$$$$$$$");
+        return res;
     }
 
 
@@ -117,11 +139,28 @@ public class TraineeService : ITraineeService
 
         await _context.SaveChangesAsync();
         _logger.LogInformation("User Updated with Id "+id);
+
+        await _redis.RemoveAsync($"trainee:{id}");
+        await _redis.RemoveAsync("trainees:all");
+
         return "Updated SucessFully";
     }
 
     public async Task<PagedResponse<TraineeResponse>> GetAllAsync(TraineeQueryParameters query)
     {
+        // await _redis.SetAsync("test","hello-----------------------------------------------------=====================", TimeSpan.FromMinutes(5));
+        // var value = await _redis.GetAsync<string>("test");
+        // _logger.LogInformation(value);
+
+        // string cacheKey = "trainees:all";
+        // var cachedData =await _redis.GetAsync<PagedResponse<TraineeResponse>>(cacheKey);
+        
+        // if (cachedData != null && string.IsNullOrWhiteSpace(query.Search) && string.IsNullOrWhiteSpace(query.Status))
+        // {
+        //     _logger.LogInformation("GetAll Redis Hit");
+        //     return cachedData;
+        // }
+ 
         var trainees = _context.Trainees.AsQueryable();
         if (!string.IsNullOrWhiteSpace(query.Search))
         {
@@ -143,13 +182,16 @@ public class TraineeService : ITraineeService
         }).Skip(page).Take(query.PageSize).ToListAsync();
 
         _logger.LogInformation("request for page no. "+query.PageNumber+" with page size "+query.PageSize+" fetched and Displayed");
-        return new PagedResponse<TraineeResponse>
+        var res = new PagedResponse<TraineeResponse>
         {
             PageNumber = query.PageNumber,
             PageSize = query.PageSize,
             TotalRecords = ret.Count,
             Data = ret
         };
+
+        // await _redis.SetAsync(cacheKey , res , TimeSpan.FromMinutes(5));
+        return res;
     }
 
 }

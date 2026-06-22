@@ -5,6 +5,7 @@ using TraineeManagement.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis;
+using TraineeManagement.API.Interfaces;
 
 namespace TraineeManagement.API.Services;
 
@@ -12,10 +13,13 @@ public class TaskAssignmentService : ITaskAssignmentService
 {
     private readonly AppDbContext _context;
     private readonly ILogger<TaskAssignmentService> _logger;
-    public TaskAssignmentService(AppDbContext context , ILogger<TaskAssignmentService> logger)
+    private readonly IRedisCacheService _redis;
+ 
+    public TaskAssignmentService(AppDbContext context , ILogger<TaskAssignmentService> logger , IRedisCacheService redis)
     {
         _context = context;
         _logger = logger;
+        _redis = redis;
     }
 
 
@@ -80,6 +84,7 @@ public class TaskAssignmentService : ITaskAssignmentService
         _context.TaskAssignments.Remove(t);
         await _context.SaveChangesAsync();
         _logger.LogInformation("TaskAssignment with id "+id+" deleted");
+        await _redis.RemoveAsync($"taskassignment:{id}");
         return true;
     }
 
@@ -113,13 +118,23 @@ public class TaskAssignmentService : ITaskAssignmentService
 
     public async Task<TaskAssignmentResponse?> GetByIdAsync(int id)
     {
+        string cacheKey = $"taskassignment:{id}";
+        
+        var cachedData = await _redis.GetAsync<TaskAssignmentResponse>(cacheKey);
+        
+        if (cachedData != null)
+        {
+            _logger.LogInformation("Redis Hit $$$$$$$$$$$$$$$$$$$$$$");
+            return cachedData;
+        }
+
         var t = await _context.TaskAssignments.FindAsync(id);
         if(t == null){
             _logger.LogCritical("Id not found");
             return null;
         }
         _logger.LogInformation("Info Displayed");
-        return new TaskAssignmentResponse
+        var res = new TaskAssignmentResponse
         {
             Id = t.Id,
             TraineeId = t.TraineeId,
@@ -134,6 +149,9 @@ public class TaskAssignmentService : ITaskAssignmentService
             // Trainee = t.Trainee,
             Remarks = t.Remarks,
         };
+        await _redis.SetAsync(cacheKey , res , TimeSpan.FromMinutes(5));
+        _logger.LogInformation("Redis Miss $$$$$$$$$$$$$$$$$$$$$$$$");
+        return res;
     }
 
 
@@ -153,6 +171,7 @@ public class TaskAssignmentService : ITaskAssignmentService
         // if(request.Remarks != "")t.Remarks = request.Remarks;
         await _context.SaveChangesAsync();
         _logger.LogInformation("learning task Updated with Id "+id);
+        await _redis.RemoveAsync($"taskassignment:{id}");
         return "Updated SucessFully";
     }
 
