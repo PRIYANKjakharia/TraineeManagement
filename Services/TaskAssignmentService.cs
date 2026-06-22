@@ -52,6 +52,7 @@ public class TaskAssignmentService : ITaskAssignmentService
         await _context.TaskAssignments.AddAsync(TaskAssignment);
         await _context.SaveChangesAsync();
         _logger.LogInformation("task Assignment done with AssignedDate "+ TaskAssignment.AssignedDate+" and with DueDate "+TaskAssignment.DueDate);
+        await _redis.RemoveAsync("submission:all");
         return new TaskAssignmentResponse
         {
             Id = TaskAssignment.Id,
@@ -85,6 +86,7 @@ public class TaskAssignmentService : ITaskAssignmentService
         await _context.SaveChangesAsync();
         _logger.LogInformation("TaskAssignment with id "+id+" deleted");
         await _redis.RemoveAsync($"taskassignment:{id}");
+        await _redis.RemoveAsync("submission:all");
         return true;
     }
 
@@ -97,9 +99,16 @@ public class TaskAssignmentService : ITaskAssignmentService
     {
         _logger.LogInformation("Info Displayed");
 
-        
+        string cacheKey = "taskassignment:all";
+        var cachedData =await _redis.GetAsync<List<TaskAssignmentResponse>>(cacheKey);
+        if (cachedData != null)
+        {
+            _logger.LogInformation("GetAll Redis Hit $$$$$$$$$$$$$$$$");
+            return cachedData;
+        }
+
         // .Include(e=>e.Trainee).Include(e=>e.Mentor).Include(e=>e.LearningTask)
-        return await _context.TaskAssignments.Select(t => new TaskAssignmentResponse
+        var res = await _context.TaskAssignments.Select(t => new TaskAssignmentResponse
         {
             Id = t.Id,
             TraineeId = t.TraineeId,
@@ -114,6 +123,9 @@ public class TaskAssignmentService : ITaskAssignmentService
             Remarks = t.Remarks,
             // Trainee = t.Trainee,
         }).ToListAsync();
+        _logger.LogInformation("GetAll Redis Miss $$$$$$$$$$$$$$$$");
+        await _redis.SetAsync(cacheKey , res , TimeSpan.FromMinutes(5));
+        return res;
     }
 
     public async Task<TaskAssignmentResponse?> GetByIdAsync(int id)
@@ -172,6 +184,7 @@ public class TaskAssignmentService : ITaskAssignmentService
         await _context.SaveChangesAsync();
         _logger.LogInformation("learning task Updated with Id "+id);
         await _redis.RemoveAsync($"taskassignment:{id}");
+        await _redis.RemoveAsync("submission:all");
         return "Updated SucessFully";
     }
 

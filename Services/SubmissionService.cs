@@ -57,7 +57,6 @@ public class SubmissionService : ISubmissionService
 
         string cacheKey = $"submission:{submission.Id}";
         await _redis.SetAsync(cacheKey , res , TimeSpan.FromMinutes(5));
-        _logger.LogInformation("Redis Miss $$$$$$$$$$$$$$$$$$$$$$$$");
         return res;
     }
 
@@ -67,10 +66,17 @@ public class SubmissionService : ISubmissionService
     {
         _logger.LogInformation("Info Displayed");
 
+        string cacheKey = "submission:all";
+        var cachedData = await _redis.GetAsync<List<SubmissionResponse>>(cacheKey);
         
+        if (cachedData != null)
+        {
+            _logger.LogInformation("GetAll Redis Hit $$$$$$$$$$$$$");
+            return cachedData;
+        }
 
         // .Include(e=>e.Trainee)
-        return await _context.Submissions.Include(x => x.TaskAssignment).Select(t => new SubmissionResponse
+        var res = await _context.Submissions.Include(x => x.TaskAssignment).Select(t => new SubmissionResponse
         {
             Id= t.Id,
             TaskAssignmentId = t.TaskAssignmentId,
@@ -80,6 +86,9 @@ public class SubmissionService : ISubmissionService
             SubmissionDate = t.SubmissionDate,
             // Trainee = t.Trainee,
         }).ToListAsync();
+        _logger.LogInformation("GetAll Redis Miss $$$$$$$$$$$$$$$$");
+        await _redis.SetAsync(cacheKey , res , TimeSpan.FromMinutes(5));
+        return res;
     }
 
     public async Task<SubmissionResponse?> GetByIdAsync(int id)
