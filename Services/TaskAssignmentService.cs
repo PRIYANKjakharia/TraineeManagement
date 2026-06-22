@@ -52,7 +52,7 @@ public class TaskAssignmentService : ITaskAssignmentService
         await _context.TaskAssignments.AddAsync(TaskAssignment);
         await _context.SaveChangesAsync();
         _logger.LogInformation("task Assignment done with AssignedDate "+ TaskAssignment.AssignedDate+" and with DueDate "+TaskAssignment.DueDate);
-        await _redis.RemoveAsync("submission:all");
+        await _redis.RemoveAsync("taskassignment:all");
         return new TaskAssignmentResponse
         {
             Id = TaskAssignment.Id,
@@ -86,7 +86,7 @@ public class TaskAssignmentService : ITaskAssignmentService
         await _context.SaveChangesAsync();
         _logger.LogInformation("TaskAssignment with id "+id+" deleted");
         await _redis.RemoveAsync($"taskassignment:{id}");
-        await _redis.RemoveAsync("submission:all");
+        await _redis.RemoveAsync("taskassignment:all");
         return true;
     }
 
@@ -184,7 +184,7 @@ public class TaskAssignmentService : ITaskAssignmentService
         await _context.SaveChangesAsync();
         _logger.LogInformation("learning task Updated with Id "+id);
         await _redis.RemoveAsync($"taskassignment:{id}");
-        await _redis.RemoveAsync("submission:all");
+        await _redis.RemoveAsync("taskassignment:all");
         return "Updated SucessFully";
     }
 

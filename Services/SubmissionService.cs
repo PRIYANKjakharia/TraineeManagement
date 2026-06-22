@@ -56,6 +56,7 @@ public class SubmissionService : ISubmissionService
         };
 
         string cacheKey = $"submission:{submission.Id}";
+        await _redis.RemoveAsync("submission:all");
         await _redis.SetAsync(cacheKey , res , TimeSpan.FromMinutes(5));
         return res;
     }
