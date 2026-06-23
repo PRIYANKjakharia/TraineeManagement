@@ -45,7 +45,7 @@ namespace TraineeManagement.API.Services
             }
             catch
             {
-             _logger.LogError("Redis is inactive");   
+                _logger.LogError("Redis is inactive");   
             }
         }
  

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using TraineeManagement.Api.Middleware;
+using TraineeManagement.API.BackgroundServices;
 using System.Globalization;
 using TraineeManagement.API.Interfaces;
 
@@ -25,13 +26,15 @@ builder.Services.AddScoped<ISubmissionService , SubmissionService>();
 builder.Services.AddScoped<IReviewService , ReviewService>();
 builder.Services.AddScoped<IFileStorageService , LocalFileStorageService>();
 builder.Services.AddScoped<ISubmissionFileService , SubmissionFileService>();
-
+builder.Services.AddScoped<IRabbitMqPublisher, RabbitMqPublisher>();
+builder.Services.AddHostedService<SubmissionProcessorService>();
 
 builder.Services.AddHttpContextAccessor();
+
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-    options.UseMySQL(connectionString);
+    options.UseMySQL(connectionString!);
 });
 
 builder.Services.AddAuthentication( JwtBearerDefaults.AuthenticationScheme ).AddJwtBearer(options =>

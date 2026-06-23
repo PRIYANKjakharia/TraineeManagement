@@ -15,7 +15,8 @@
           "Microsoft.EntityFrameworkCore.InMemory": "10.0.8",
           "Microsoft.Extensions.Caching.StackExchangeRedis": "10.0.9",
           "MySql.EntityFrameworkCore": "10.0.7",
-          "NSwag.AspNetCore": "14.7.1"
+          "NSwag.AspNetCore": "14.7.1",
+          "RabbitMQ.Client": "6.8.1"
         },
         "runtime": {
           "TraineeManagement.Api.dll": {}
@@ -762,6 +763,14 @@
           }
         }
       },
+      "RabbitMQ.Client/6.8.1": {
+        "runtime": {
+          "lib/netstandard2.0/RabbitMQ.Client.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.8.1.0"
+          }
+        }
+      },
       "StackExchange.Redis/2.7.27": {
         "dependencies": {
           "Pipelines.Sockets.Unofficial": "2.2.8"
@@ -1244,6 +1253,13 @@
       "sha512": "sha512-zG2FApP5zxSx6OcdJQLbZDk2AVlN2BNQD6MorwIfV6gVj0RRxWPEp2LXAxqDGZqeNV1Zp0BNPcNaey/GXmTdvQ==",
       "path": "pipelines.sockets.unofficial/2.2.8",
       "hashPath": "pipelines.sockets.unofficial.2.2.8.nupkg.sha512"
+    },
+    "RabbitMQ.Client/6.8.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-jNsmGgmCNw2S/NzskeN2ijtGywtH4Sk/G6jWUTD5sY9SrC27Xz6BsLIiB8hdsfjeyWCa4j4GvCIGkpE8wrjU1Q==",
+      "path": "rabbitmq.client/6.8.1",
+      "hashPath": "rabbitmq.client.6.8.1.nupkg.sha512"
     },
     "StackExchange.Redis/2.7.27": {
       "type": "package",

@@ -6,20 +6,23 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis;
 using TraineeManagement.API.Interfaces;
+using TraineeManagement.API.Messages;
 
 namespace TraineeManagement.API.Services;
 
 public class SubmissionService : ISubmissionService
 {
     private readonly AppDbContext _context;
+    private readonly IRabbitMqPublisher _rabbitMqPublisher;
     private readonly ILogger<SubmissionService> _logger;
     private readonly IRedisCacheService _redis;
 
-    public SubmissionService(AppDbContext context , ILogger<SubmissionService> logger, IRedisCacheService redis)
+    public SubmissionService(AppDbContext context , ILogger<SubmissionService> logger, IRedisCacheService redis , IRabbitMqPublisher rabbitMqPublisher)
     {
         _context = context;
         _logger = logger;
         _redis = redis;
+        _rabbitMqPublisher = rabbitMqPublisher;
     }
 
 
@@ -38,12 +41,18 @@ public class SubmissionService : ISubmissionService
             Status = request.Status,
             SubmissionDate = request.SubmissionDate,
             CreatedDate = DateTime.UtcNow,
-            UpdatedDate = DateTime.UtcNow
+            UpdatedDate = DateTime.UtcNow,
 
         };
         // trainees.Add(learningTask);
         await _context.Submissions.AddAsync(submission);
         await _context.SaveChangesAsync();
+
+        _rabbitMqPublisher.Publish(new SubmissionMessage
+        {
+           SubmissionId = submission.Id ,
+           TaskAssignmentId = submission.TaskAssignmentId
+        });
         _logger.LogInformation("task Assigned done with assignmentId "+ submission.TaskAssignmentId );
         var res = new SubmissionResponse
         {
@@ -53,6 +62,8 @@ public class SubmissionService : ISubmissionService
             Notes = submission.Notes,
             Status = submission.Status,
             SubmissionDate = submission.SubmissionDate,
+            TaskTitle = AssignmentExists.LearningTaskTitle,
+            TraineeName = AssignmentExists.TraineeName
         };
 
         string cacheKey = $"submission:{submission.Id}";
