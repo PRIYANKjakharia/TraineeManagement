@@ -27,7 +27,12 @@ namespace TraineeManagement.Api.Controllers
                 return NotFound("Submission not found");
             }
         
-            return Ok(response);
+            return Accepted(new
+            {
+                Message = "File uploaded successfully. Processing context queued.",
+                CorrelationId = response.CorrelationId,
+                FileId = response.Id
+            });
         }
 
         [HttpGet("submission-files/{id}/download")]

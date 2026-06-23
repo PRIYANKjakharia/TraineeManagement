@@ -4,6 +4,18 @@ using Microsoft.EntityFrameworkCore;
 using TraineeManagement.API.Data;
 using TraineeManagement.API.DTOs;
 using TraineeManagement.API.Models;
+using System;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Text.Json;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using RabbitMQ.Client;
+using TraineeManagement.Api.Messaging;
 
 namespace TraineeManagement.API.Services;
 
@@ -13,12 +25,16 @@ public class SubmissionFileService : ISubmissionFileService
     private readonly IFileStorageService _storage;
     private readonly IConfiguration _configuration;
     private readonly IHttpContextAccessor _httpContextAccessor;
-    public SubmissionFileService(AppDbContext context , IFileStorageService storage , IConfiguration configuration , IHttpContextAccessor httpContextAccessor)
+    private readonly ILogger<SubmissionFileService> _logger;
+    private readonly RabbitMqSettings _rabbitSettings;
+    public SubmissionFileService(AppDbContext context , IFileStorageService storage , IConfiguration configuration , IHttpContextAccessor httpContextAccessor , ILogger<SubmissionFileService> logger, IOptions<RabbitMqSettings> rabbitSettings)
     {
         _context = context;
         _storage = storage;
         _configuration = configuration;
         _httpContextAccessor = httpContextAccessor;
+        _logger = logger;
+        _rabbitSettings = rabbitSettings.Value;
     }
 
     public async Task<UploadFileResponse?> UploadAsync(int submissionId, IFormFile file)
@@ -30,7 +46,7 @@ public class SubmissionFileService : ISubmissionFileService
         }
         if(file.Length == 0)
         {
-            throw new Exception("File Is Empty");
+            throw new ArgumentException("File Is Empty");
         }
 
 
@@ -85,7 +101,62 @@ public class SubmissionFileService : ISubmissionFileService
 
         _context.SubmissionFiles.Add(submissionFile);
         await _context.SaveChangesAsync();
+        var correlationId = Guid.NewGuid();
+        var messageContract = new SubmissionProcessingRequested
+        {
+            CorrelationId = correlationId,
+            SubmissionId = submissionId,
+            FileId = submissionFile.Id
+        };
 
+        try
+        {
+            var factory = new ConnectionFactory
+            {
+                HostName = _rabbitSettings.Host,
+                Port = _rabbitSettings.Port,
+                VirtualHost = _rabbitSettings.VirtualHost,
+                UserName = _rabbitSettings.Username,
+                Password = _rabbitSettings.Password
+            };
+
+
+            using var connection = await factory.CreateConnectionAsync();
+            using var channel = await connection.CreateChannelAsync();
+
+            await channel.QueueDeclareAsync(
+                queue: "submission-processing",
+                durable: true,
+                exclusive: false,
+                autoDelete: false,
+                arguments: null);
+
+            var jsonPayload = JsonSerializer.Serialize(messageContract);
+            var body = Encoding.UTF8.GetBytes(jsonPayload);
+            var properties = new BasicProperties
+            {
+                Persistent = true 
+            };
+
+            await channel.BasicPublishAsync(
+                exchange: string.Empty,
+                routingKey: "submission-processing",
+                mandatory: true,
+                basicProperties: properties,
+                body: body);
+
+            _logger.LogInformation("Message published to broker layout stack. MessageId: {MessageId}, CorrelationId: {CorrelationId}", 
+                messageContract.MessageId, correlationId);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "RabbitMQ connectivity failure structural anomaly detected for submission target {Id}.", submissionId);
+            
+            _context.SubmissionFiles.Remove(submissionFile);
+            await _context.SaveChangesAsync();
+
+            throw new InvalidOperationException("Messaging broker communication pipelines are offline. Async task queue injection aborted.");
+        }
 
         return new UploadFileResponse
         {
@@ -99,7 +170,9 @@ public class SubmissionFileService : ISubmissionFileService
         
             ContentType = submissionFile.ContentType,
         
-            Checksum = submissionFile.Checksum
+            Checksum = submissionFile.Checksum,
+            
+            CorrelationId = correlationId
         };
     }
     public async Task<(Stream stream, string contentType, string fileName)?> DownloadAsync(int fileId)

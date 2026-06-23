@@ -10,5 +10,6 @@ public class UploadFileResponse{
     public string? ContentType { get; set; }
     public string? Checksum { get; set; }
 
+    public Guid CorrelationId { get; set; } 
     public long? FileSize { get; set; }
 }

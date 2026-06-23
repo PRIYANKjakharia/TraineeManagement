@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using TraineeManagement.Api.Middleware;
-using TraineeManagement.API.BackgroundServices;
+using TraineeManagement.Api.Messaging;
 using System.Globalization;
 using TraineeManagement.API.Interfaces;
 
@@ -26,8 +26,6 @@ builder.Services.AddScoped<ISubmissionService , SubmissionService>();
 builder.Services.AddScoped<IReviewService , ReviewService>();
 builder.Services.AddScoped<IFileStorageService , LocalFileStorageService>();
 builder.Services.AddScoped<ISubmissionFileService , SubmissionFileService>();
-builder.Services.AddScoped<IRabbitMqPublisher, RabbitMqPublisher>();
-builder.Services.AddHostedService<SubmissionProcessorService>();
 
 builder.Services.AddHttpContextAccessor();
 
@@ -56,13 +54,12 @@ builder.Services.AddStackExchangeRedisCache(options =>
 {
     options.Configuration = builder.Configuration["Redis:ConnectionString"];
 });
-
-
  
 builder.Services.AddScoped<IRedisCacheService, RedisCacheService>();
 
 builder.Services.AddAuthorization();
 // Console.WriteLine(BCrypt.Net.BCrypt.HashPassword("Admin@123"));
+builder.Services.Configure<RabbitMqSettings>(builder.Configuration.GetSection("RabbitMQ"));
 
 var  MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
