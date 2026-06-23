@@ -28,7 +28,7 @@ public class SubmissionService : ISubmissionService
     {   
         var AssignmentExists = await _context.TaskAssignments.FirstOrDefaultAsync(x => x.Id == request.TaskAssignmentId);
         
-        if(AssignmentExists == null) return null;
+        if(AssignmentExists == null) return null!;
 
         var submission = new Submission
         {

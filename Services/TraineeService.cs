@@ -24,10 +24,10 @@ public class TraineeService : ITraineeService
     // create
     public async Task<TraineeResponse> Create(CreateTraineeRequest request)
     {   
-        var EmailExists = await _context.Trainees.FirstOrDefaultAsync(k => k.Email.ToLower() == request.Email.ToLower());
+        var EmailExists = await _context.Trainees.FirstOrDefaultAsync(k => k.Email!.ToLower() == request.Email!.ToLower());
         if(EmailExists != null){
             _logger.LogCritical("Email already exists");
-            return null;
+            return null!;
         }
         var trainee = new Trainee
         {
@@ -120,7 +120,7 @@ public class TraineeService : ITraineeService
     public async Task<string> Update (int id, UpdateTraineeRequest request)
     {
         var t = await _context.Trainees.FindAsync(id);
-        var EmailExists = await _context.Trainees.FirstOrDefaultAsync(k => k.Id != id && k.Email.ToLower() == request.Email.ToLower());
+        var EmailExists = await _context.Trainees.FirstOrDefaultAsync(k => k.Id != id && k.Email!.ToLower() == request.Email!.ToLower());
         if(EmailExists != null){
             _logger.LogCritical("Email already exists");
             return "Email already exists";
@@ -164,7 +164,7 @@ public class TraineeService : ITraineeService
         var trainees = _context.Trainees.AsQueryable();
         if (!string.IsNullOrWhiteSpace(query.Search))
         {
-            trainees = trainees.Where(t => t.FirstName.Contains(query.Search) || t.LastName.Contains(query.Search));
+            trainees = trainees.Where(t => t.FirstName!.Contains(query.Search) || t.LastName!.Contains(query.Search));
         }
         if (!string.IsNullOrWhiteSpace(query.Status))
         {
