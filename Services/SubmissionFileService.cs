@@ -99,7 +99,7 @@ public class SubmissionFileService : ISubmissionFileService
             UpdatedDate = DateTime.UtcNow
         };
 
-        _context.SubmissionFiles.Add(submissionFile);
+        await _context.SubmissionFiles.AddAsync(submissionFile);
         await _context.SaveChangesAsync();
         var correlationId = Guid.NewGuid();
         var messageContract = new SubmissionProcessingRequested
@@ -108,6 +108,20 @@ public class SubmissionFileService : ISubmissionFileService
             SubmissionId = submissionId,
             FileId = submissionFile.Id
         };
+
+        var processingJob = new ProcessingJob
+        {
+            MessageId = messageContract.MessageId,
+            CorrelationId = correlationId,
+            SubmissionId = submissionId,
+            FileId = submissionFile.Id,
+            Status = "Queued",
+            Attempts = 0
+        };
+        
+        _context.ProcessingJobs.Add(processingJob);
+        
+        await _context.SaveChangesAsync();
 
         try
         {

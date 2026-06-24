@@ -3650,11 +3650,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\priyank.jakharia\\Desktop\\Tasks\\day3\\TraineeManagement.Api\\TraineeManagement.Api.csproj",
-      "projectName": "TraineeManagement.Api",
-      "projectPath": "C:\\Users\\priyank.jakharia\\Desktop\\Tasks\\day3\\TraineeManagement.Api\\TraineeManagement.Api.csproj",
+      "projectUniqueName": "C:\\Users\\priyank.jakharia\\Desktop\\Tasks\\day3\\TraineeManagement.API\\TraineeManagement.API.csproj",
+      "projectName": "TraineeManagement.API",
+      "projectPath": "C:\\Users\\priyank.jakharia\\Desktop\\Tasks\\day3\\TraineeManagement.API\\TraineeManagement.API.csproj",
       "packagesPath": "C:\\Users\\priyank.jakharia\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\priyank.jakharia\\Desktop\\Tasks\\day3\\TraineeManagement.Api\\obj\\",
+      "outputPath": "C:\\Users\\priyank.jakharia\\Desktop\\Tasks\\day3\\TraineeManagement.API\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\priyank.jakharia\\AppData\\Roaming\\NuGet\\NuGet.Config"
