@@ -145,8 +145,7 @@ public class SubmissionFileService : ISubmissionFileService
                 basicProperties: properties,
                 body: body);
 
-            _logger.LogInformation("Message published to broker layout stack. MessageId: {MessageId}, CorrelationId: {CorrelationId}", 
-                messageContract.MessageId, correlationId);
+            _logger.LogInformation("Message published to broker layout stack. MessageId: {MessageId}, CorrelationId: {CorrelationId}",  messageContract.MessageId, correlationId);
         }
         catch (Exception ex)
         {
