@@ -19,23 +19,23 @@ public class AuthService : IAuthService
     }
     public async Task<LoginResponse> LoginAsync(LoginRequest request)
     {
-        var user = await _context.Users.FirstOrDefaultAsync(x => x.Username == request.Username);
+        var user = await _context.Users.FirstOrDefaultAsync(_user => _user.Username == request.Username);
         if(user == null)
         {
-            return null;
+            return null!;
         }
 
         bool isValid = BCrypt.Net.BCrypt.Verify(request.Password,user.PasswordHash);
         if (!isValid)
         {
-            return null;
+            return null!;
         }
 
         var claims = new[]
         {
           new Claim( ClaimTypes.NameIdentifier , user.Id.ToString()),
-          new Claim( ClaimTypes.Name, user.Username),
-          new Claim( ClaimTypes.Role, user.Role)
+          new Claim( ClaimTypes.Name, user.Username!),
+          new Claim( ClaimTypes.Role, user.Role!)
 
         };
 
@@ -52,8 +52,8 @@ public class AuthService : IAuthService
         return new LoginResponse
         {
             Id = user.Id,
-            Username = user.Username,
-            Role = user.Role,
+            Username = user.Username!,
+            Role = user.Role!,
             Token= tokenString,
             ExpiresIn = 3600
         };

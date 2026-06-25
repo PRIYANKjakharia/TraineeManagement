@@ -12,6 +12,13 @@ using TraineeManagement.API.Interfaces;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddHttpClient("TrainingDirectoryService", client =>
+{
+    client.BaseAddress = new Uri("http://localhost:5050/");
+    client.Timeout = TimeSpan.FromSeconds(5);
+    client.DefaultRequestHeaders.Add("Accept", "application/json");
+})
+.AddStandardResilienceHandler();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -27,6 +34,7 @@ builder.Services.AddScoped<IReviewService , ReviewService>();
 builder.Services.AddScoped<IFileStorageService , LocalFileStorageService>();
 builder.Services.AddScoped<ISubmissionFileService , SubmissionFileService>();
 builder.Services.AddScoped<IProcessingJobService , ProcessingJobService>();
+builder.Services.AddScoped<ITrainingDirectoryClient , TrainingDirectoryClient>();
 
 builder.Services.AddHttpContextAccessor();
 

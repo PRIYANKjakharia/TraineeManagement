@@ -138,7 +138,17 @@ public class TraineeService : ITraineeService
         await _context.SaveChangesAsync();
         _logger.LogInformation("User Updated with Id "+id);
 
-        await _redis.RemoveAsync($"trainee:{id}");
+        var res = new TraineeResponse
+        {
+            Id = t.Id,
+            FirstName = t.FirstName,
+            LastName = t.LastName,
+            Email = t.Email,
+            TechStack = t.TechStack,
+            Status = t.Status
+        };
+        var cacheKey = $"trainee:{id}";
+        await _redis.SetAsync(cacheKey , res , TimeSpan.FromMinutes(5));
 
         return "Updated SucessFully";
     }

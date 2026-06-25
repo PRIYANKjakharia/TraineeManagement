@@ -39,7 +39,7 @@ public class SubmissionFileService : ISubmissionFileService
 
     public async Task<UploadFileResponse?> UploadAsync(int submissionId, IFormFile file)
     {
-        var submission = await _context.Submissions.FirstOrDefaultAsync(s => s.Id == submissionId);
+        var submission = await _context.Submissions.FirstOrDefaultAsync(sub => sub.Id == submissionId);
         if(submission == null)
         {
             return null;
@@ -190,7 +190,7 @@ public class SubmissionFileService : ISubmissionFileService
     }
     public async Task<(Stream stream, string contentType, string fileName)?> DownloadAsync(int fileId)
     {
-        var file = await _context.SubmissionFiles.FirstOrDefaultAsync(x => x.Id == fileId);
+        var file = await _context.SubmissionFiles.FirstOrDefaultAsync(_file => _file.Id == fileId);
     
         if (file == null)
         {
@@ -210,7 +210,7 @@ public class SubmissionFileService : ISubmissionFileService
     }
     public async Task<bool> DeleteAsync(int fileId)
     {
-        var file = await _context.SubmissionFiles.FirstOrDefaultAsync(x => x.Id == fileId);
+        var file = await _context.SubmissionFiles.FirstOrDefaultAsync(_file => _file.Id == fileId);
     
         if (file == null)
         {

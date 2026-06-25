@@ -26,7 +26,7 @@ public class SubmissionService : ISubmissionService
     // create
     public async Task<SubmissionResponse> CreateAsync(CreateSubmissionRequest request)
     {   
-        var AssignmentExists = await _context.TaskAssignments.FirstOrDefaultAsync(x => x.Id == request.TaskAssignmentId);
+        var AssignmentExists = await _context.TaskAssignments.FirstOrDefaultAsync(ta => ta.Id == request.TaskAssignmentId);
         
         if(AssignmentExists == null) return null!;
 

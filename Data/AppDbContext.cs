@@ -36,9 +36,9 @@ public class AppDbContext : DbContext
 
         modelBuilder.Entity<Submission>().HasOne(t=> t.TaskAssignment).WithMany().HasForeignKey(t=> t.TaskAssignmentId);
 
-        modelBuilder.Entity<Review>().HasOne(r=> r.Submission).WithMany().HasForeignKey(r=> r.SubmissionId);
-        modelBuilder.Entity<Review>().HasOne(r=> r.Mentor).WithMany().HasForeignKey(r=> r.MentorId);
+        modelBuilder.Entity<Review>().HasOne(s=> s.Submission).WithMany().HasForeignKey(s=> s.SubmissionId);
+        modelBuilder.Entity<Review>().HasOne(m=> m.Mentor).WithMany().HasForeignKey(m=> m.MentorId);
  
-        modelBuilder.Entity<SubmissionFile>().HasOne(f=> f.Submission).WithMany(s=>s.Files).HasForeignKey(f=> f.SubmissionId);
+        modelBuilder.Entity<SubmissionFile>().HasOne(f=> f.Submission).WithMany(f=>f.Files).HasForeignKey(f=> f.SubmissionId);
     }
 }

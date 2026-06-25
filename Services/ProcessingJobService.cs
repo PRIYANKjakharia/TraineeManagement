@@ -17,7 +17,7 @@ public class ProcessingJobService : IProcessingJobService
     public async Task<ProcessingJobResponse?> GetByIdAsync(int id)
     {
         var job = await _context.ProcessingJobs
-            .FirstOrDefaultAsync(x => x.Id == id);
+            .FirstOrDefaultAsync(_job => _job.Id == id);
  
         if (job == null)
             return null;

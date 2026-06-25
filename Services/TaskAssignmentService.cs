@@ -183,7 +183,23 @@ public class TaskAssignmentService : ITaskAssignmentService
         // if(request.Remarks != "")t.Remarks = request.Remarks;
         await _context.SaveChangesAsync();
         _logger.LogInformation("learning task Updated with Id "+id);
-        await _redis.RemoveAsync($"taskassignment:{id}");
+        var cacheKey = $"taskassignment:{id}";
+        var res = new TaskAssignmentResponse
+        {
+            Id = t.Id,
+            TraineeId = t.TraineeId,
+            TraineeName = t.TraineeName,
+            MentorId = t.MentorId,
+            MentorName = t.MentorName,
+            LearningTaskId = t.LearningTaskId,
+            LearningTaskTitle = t.LearningTaskTitle,
+            DueDate = t.DueDate,
+            AssignedDate = t.AssignedDate,
+            Status = t.Status,
+            // Trainee = t.Trainee,
+            Remarks = t.Remarks,
+        };
+        await _redis.SetAsync(cacheKey , res , TimeSpan.FromMinutes(5));
         await _redis.RemoveAsync("taskassignment:all");
         return "Updated SucessFully";
     }

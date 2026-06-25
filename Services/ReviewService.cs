@@ -22,8 +22,8 @@ public class ReviewService : IReviewService
     // create
     public async Task<ReviewResponse> CreateAsync(CreateReviewRequest request)
     {   
-        var submissionExists = await _context.Submissions.FirstOrDefaultAsync(x => x.Id == request.SubmissionId);
-        var mentorExists = await _context.Mentors.FirstOrDefaultAsync(x => x.Id == request.MentorId);
+        var submissionExists = await _context.Submissions.FirstOrDefaultAsync(subex => subex.Id == request.SubmissionId);
+        var mentorExists = await _context.Mentors.FirstOrDefaultAsync(mnex => mnex.Id == request.MentorId);
         
         if(submissionExists == null || mentorExists == null) return null!;
 
