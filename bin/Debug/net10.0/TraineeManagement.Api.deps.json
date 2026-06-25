@@ -6,7 +6,7 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v10.0": {
-      "TraineeManagement.API/1.0.0": {
+      "TraineeManagement.Api/1.0.0": {
         "dependencies": {
           "BCrypt.Net-Next": "4.2.0",
           "Microsoft.AspNetCore.Authentication.JwtBearer": "10.0.9",
@@ -19,7 +19,7 @@
           "RabbitMQ.Client": "7.2.1"
         },
         "runtime": {
-          "TraineeManagement.API.dll": {}
+          "TraineeManagement.Api.dll": {}
         }
       },
       "BCrypt.Net-Next/4.2.0": {
@@ -927,7 +927,7 @@
     }
   },
   "libraries": {
-    "TraineeManagement.API/1.0.0": {
+    "TraineeManagement.Api/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

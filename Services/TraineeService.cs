@@ -45,7 +45,6 @@ public class TraineeService : ITraineeService
         await _context.Trainees.AddAsync(trainee);
         await _context.SaveChangesAsync();
 
-        await _redis.RemoveAsync("trainees:all");
         _logger.LogInformation("User Created with email "+request.Email);
         return new TraineeResponse
         {
@@ -76,7 +75,6 @@ public class TraineeService : ITraineeService
         _logger.LogInformation("User with id "+id+" deleted");
 
         await _redis.RemoveAsync($"trainee:{id}");
-        await _redis.RemoveAsync("trainees:all");
         return true;
     }
 
@@ -141,7 +139,6 @@ public class TraineeService : ITraineeService
         _logger.LogInformation("User Updated with Id "+id);
 
         await _redis.RemoveAsync($"trainee:{id}");
-        await _redis.RemoveAsync("trainees:all");
 
         return "Updated SucessFully";
     }

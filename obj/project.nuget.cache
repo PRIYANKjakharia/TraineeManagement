@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "ut1pJOUOwPc=",
+  "dgSpecHash": "egkEvZmJSUY=",
   "success": true,
-  "projectFilePath": "C:\\Users\\priyank.jakharia\\Desktop\\Tasks\\day3\\TraineeManagement.API\\TraineeManagement.API.csproj",
+  "projectFilePath": "C:\\Users\\priyank.jakharia\\Desktop\\Tasks\\day3\\TraineeManagement.Api\\TraineeManagement.Api.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\priyank.jakharia\\.nuget\\packages\\bcrypt.net-next\\4.2.0\\bcrypt.net-next.4.2.0.nupkg.sha512",
     "C:\\Users\\priyank.jakharia\\.nuget\\packages\\bouncycastle.cryptography\\2.6.2\\bouncycastle.cryptography.2.6.2.nupkg.sha512",
@@ -75,9 +75,9 @@
       "code": "NU1510",
       "level": "Warning",
       "message": "PackageReference Microsoft.AspNetCore.Identity will not be pruned. Consider removing this package from your dependencies, as it is likely unnecessary.",
-      "projectPath": "C:\\Users\\priyank.jakharia\\Desktop\\Tasks\\day3\\TraineeManagement.API\\TraineeManagement.API.csproj",
+      "projectPath": "C:\\Users\\priyank.jakharia\\Desktop\\Tasks\\day3\\TraineeManagement.Api\\TraineeManagement.Api.csproj",
       "warningLevel": 1,
-      "filePath": "C:\\Users\\priyank.jakharia\\Desktop\\Tasks\\day3\\TraineeManagement.API\\TraineeManagement.API.csproj",
+      "filePath": "C:\\Users\\priyank.jakharia\\Desktop\\Tasks\\day3\\TraineeManagement.Api\\TraineeManagement.Api.csproj",
       "libraryId": "Microsoft.AspNetCore.Identity",
       "targetGraphs": [
         "net10.0"
