@@ -15,10 +15,7 @@ public class TrainingDirectoryClient : ITrainingDirectoryClient
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly ILogger<TrainingDirectoryClient> _logger;
 
-    public TrainingDirectoryClient(
-        IHttpClientFactory httpClientFactory, 
-        IHttpContextAccessor httpContextAccessor, 
-        ILogger<TrainingDirectoryClient> logger)
+    public TrainingDirectoryClient( IHttpClientFactory httpClientFactory, IHttpContextAccessor httpContextAccessor, ILogger<TrainingDirectoryClient> logger)
     {
         _httpClientFactory = httpClientFactory;
         _httpContextAccessor = httpContextAccessor;
@@ -48,7 +45,7 @@ public class TrainingDirectoryClient : ITrainingDirectoryClient
             
             if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
             {
-                throw new ArgumentException("Validation failure parameters detected on the remote service boundary.");
+                throw new ArgumentException("Validation failure ");
             }
             
             response.EnsureSuccessStatusCode(); 
