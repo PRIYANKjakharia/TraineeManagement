@@ -162,7 +162,6 @@ C:\Users\priyank.jakharia\Desktop\Tasks\day3\TraineeManagement.Api\obj\Debug\net
 C:\Users\priyank.jakharia\Desktop\Tasks\day3\TraineeManagement.Api\obj\Debug\net10.0\TraineeManagement.Api.pdb
 C:\Users\priyank.jakharia\Desktop\Tasks\day3\TraineeManagement.Api\obj\Debug\net10.0\TraineeManagement.Api.genruntimeconfig.cache
 C:\Users\priyank.jakharia\Desktop\Tasks\day3\TraineeManagement.Api\obj\Debug\net10.0\ref\TraineeManagement.Api.dll
-C:\Users\priyank.jakharia\Desktop\Tasks\day3\TraineeManagement.Api\obj\Debug\net10.0\TraineeM.CAB18C46.Up2Date
 C:\Users\priyank.jakharia\Desktop\Tasks\day3\TraineeManagement.Api\bin\Debug\net10.0\Microsoft.Extensions.AmbientMetadata.Application.dll
 C:\Users\priyank.jakharia\Desktop\Tasks\day3\TraineeManagement.Api\bin\Debug\net10.0\Microsoft.Extensions.Compliance.Abstractions.dll
 C:\Users\priyank.jakharia\Desktop\Tasks\day3\TraineeManagement.Api\bin\Debug\net10.0\Microsoft.Extensions.DependencyInjection.AutoActivation.dll
@@ -175,3 +174,7 @@ C:\Users\priyank.jakharia\Desktop\Tasks\day3\TraineeManagement.Api\bin\Debug\net
 C:\Users\priyank.jakharia\Desktop\Tasks\day3\TraineeManagement.Api\bin\Debug\net10.0\Polly.Core.dll
 C:\Users\priyank.jakharia\Desktop\Tasks\day3\TraineeManagement.Api\bin\Debug\net10.0\Polly.Extensions.dll
 C:\Users\priyank.jakharia\Desktop\Tasks\day3\TraineeManagement.Api\bin\Debug\net10.0\Polly.RateLimiting.dll
+C:\Users\priyank.jakharia\Desktop\Tasks\day3\TraineeManagement.Api\bin\Debug\net10.0\Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore.dll
+C:\Users\priyank.jakharia\Desktop\Tasks\day3\TraineeManagement.Api\bin\Debug\net10.0\HealthChecks.Redis.dll
+C:\Users\priyank.jakharia\Desktop\Tasks\day3\TraineeManagement.Api\bin\Debug\net10.0\HealthChecks.Rabbitmq.dll
+C:\Users\priyank.jakharia\Desktop\Tasks\day3\TraineeManagement.Api\obj\Debug\net10.0\TraineeM.CAB18C46.Up2Date

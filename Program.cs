@@ -8,6 +8,9 @@ using TraineeManagement.Api.Middleware;
 using TraineeManagement.Api.Messaging;
 using System.Globalization;
 using TraineeManagement.API.Interfaces;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using TraineeManagement.API.Extensions;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,6 +40,20 @@ builder.Services.AddScoped<IProcessingJobService , ProcessingJobService>();
 builder.Services.AddScoped<ITrainingDirectoryClient , TrainingDirectoryClient>();
 
 builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddHealthChecks()
+    .AddDbContextCheck<AppDbContext>(tags: new[] { "ready" })
+    .AddRedis(
+        builder.Configuration["Redis:ConnectionString"]!,
+        name: "Redis",
+        tags: new[] { "ready" }
+    ).AddRabbitMQ(
+        async sp => await sp.GetRequiredService<RabbitMQ.Client.ConnectionFactory>().CreateConnectionAsync(),
+        name: "RabbitMQ",
+        tags: new[] { "ready" }
+    );
+ 
+
 
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
@@ -70,6 +87,21 @@ builder.Services.AddAuthorization();
 // Console.WriteLine(BCrypt.Net.BCrypt.HashPassword("Admin@123"));
 builder.Services.Configure<RabbitMqSettings>(builder.Configuration.GetSection("RabbitMQ"));
 
+builder.Services.AddSingleton(sp =>
+{
+    var rabbitMqSection = builder.Configuration.GetSection("RabbitMQ");
+ 
+    return new RabbitMQ.Client.ConnectionFactory
+    {
+        HostName = rabbitMqSection["Host"] ?? "localhost",
+        Port = int.Parse(rabbitMqSection["Port"] ?? "5672"),
+        UserName = rabbitMqSection["UserName"] ?? "guest",
+        Password = rabbitMqSection["Password"] ?? "guest",
+        VirtualHost = rabbitMqSection["VirtualHost"] ?? "/"
+    };
+});
+ 
+
 var  MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
 builder.Services.AddCors(options =>
@@ -93,7 +125,19 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseMiddleware<GlobalExceptionMiddleware>();
-
+app.MapHealthChecks("/health/live", new HealthCheckOptions
+{
+    Predicate = _ => false,
+    ResponseWriter = HealthCheckReportExtension.WriteHealthCheckResponse
+});
+ 
+app.MapHealthChecks("/health/ready", new HealthCheckOptions
+{
+    Predicate = check => check.Tags.Contains("ready"),
+    ResponseWriter = HealthCheckReportExtension.WriteHealthCheckResponse
+});
+ 
+ 
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
