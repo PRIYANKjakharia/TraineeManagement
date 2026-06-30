@@ -14,6 +14,8 @@
         "outputPath": "C:\\Users\\priyank.jakharia\\Desktop\\Tasks\\day3\\TraineeManagement.Api\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
+          "C:\\Users\\priyank.jakharia\\Desktop\\Tasks\\day3\\TraineeManagement.Api\\NuGet.Config",
+          "C:\\Users\\priyank.jakharia\\Desktop\\Tasks\\day3\\NuGet.Config",
           "C:\\Users\\priyank.jakharia\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [

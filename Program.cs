@@ -14,6 +14,8 @@ using TraineeManagement.API.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
+
 // Add services to the container.
 builder.Services.AddHttpClient("TrainingDirectoryService", client =>
 {
@@ -113,6 +115,44 @@ builder.Services.AddCors(options =>
 
 
 var app = builder.Build();
+
+// =========================================================
+// FIXED: RESILIENT AUTO-MIGRATION
+// =========================================================
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var logger = services.GetRequiredService<ILogger<Program>>();
+    var context = services.GetRequiredService<AppDbContext>();
+
+    // Retry up to 6 times (spanning 30 seconds) to ensure MySQL is ready for traffic
+    for (int retry = 1; retry <= 6; retry++)
+    {
+        try
+        {
+            logger.LogInformation("Applying migrations to containerized database (Attempt {Attempt}/6)...", retry);
+            context.Database.Migrate();
+            logger.LogInformation("Database migrations and schema updates applied successfully!");
+            break; // Break loop on successful execution
+        }
+        catch (Exception ex)
+        {
+            logger.LogWarning("Migration attempt {Attempt} failed: {Message}", retry, ex.Message);
+            
+            if (retry == 6)
+            {
+                logger.LogError(ex, "FATAL: Could not migrate database after 6 attempts. Halting application execution.");
+                throw; // Crash container cleanly so Docker Compose knows it is broken
+            }
+            
+            System.Threading.Thread.Sleep(5000); // Sleep for 5 seconds before next poll
+        }
+    }
+}
+// =========================================================
+
+ 
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
